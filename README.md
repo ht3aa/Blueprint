@@ -4,7 +4,7 @@ scaffold your app with ease. (for now it generate migrations,models and filament
 ## Installation
 first install the package 
 ```
-composer require hasanweb/blueprint
+composer require hasanweb/blueprint --dev
 ```
 then run this command
 ```
