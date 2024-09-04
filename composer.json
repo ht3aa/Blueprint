@@ -1,0 +1,28 @@
+{
+    "name": "hasanweb/blueprint",
+    "description": "scaffold your app",
+    "autoload": {
+        "psr-4": {
+            "Hasanweb\\Blueprint\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ht3aa",
+            "email": "ht3aa@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Hasanweb\\Blueprint\\BlueprintServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": "*",
+        "illuminate/support": "^11.22",
+        "illuminate/console": "^11.22"
+    }
+}
