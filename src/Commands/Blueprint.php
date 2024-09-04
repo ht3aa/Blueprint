@@ -3,7 +3,9 @@
 namespace Hasanweb\Blueprint\Commands;
 
 use Hasanweb\Blueprint\Migrations\Migration;
+use Hasanweb\Blueprint\Models\Model;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 
 class Blueprint extends Command
@@ -55,5 +57,14 @@ class Blueprint extends Command
 
         Migration::make($data);
 
+        Artisan::call('migrate');
+
+        Model::make($data);
+
+        if ($data['with-filament-resources']) {
+            foreach ($data['models'] as $modelName => $fields) {
+                Artisan::call('make:filament-resource '.$modelName.' --generate');
+            }
+        }
     }
 }

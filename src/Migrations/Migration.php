@@ -6,9 +6,7 @@ class Migration
 {
     private static function template($tableName, $columns)
     {
-        $fileTemplate = "
-
-<?php
+        $fileTemplate = "<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -21,7 +19,7 @@ return new class extends Migration
     */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint \$table) {
+        Schema::create(\"$tableName\", function (Blueprint \$table) {
           $columns
         });
     }
@@ -31,10 +29,9 @@ return new class extends Migration
     */
     public function down(): void
     {
-        Schema::dropIfExists($tableName);
+        Schema::dropIfExists(\"$tableName\");
     }
-};
-    ";
+};";
 
         return $fileTemplate;
     }
@@ -65,6 +62,7 @@ return new class extends Migration
     {
         $incrementBy = 1;
         $randomNumber = rand(100000, 999999);
+
         foreach ($data['migrations'] as $tableName => $fields) {
             $columns = self::columns($fields);
             $migration = self::template($tableName, $columns);
