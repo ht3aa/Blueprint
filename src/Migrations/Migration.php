@@ -20,7 +20,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(\"$tableName\", function (Blueprint \$table) {
+          \$table->id();
+
           $columns
+
+          \$table->timestamps();
         });
     }
 

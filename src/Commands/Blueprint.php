@@ -58,13 +58,18 @@ class Blueprint extends Command
         Migration::make($data);
 
         Artisan::call('migrate');
+        $this->info('Migration generated successfully');
 
         Model::make($data);
 
+        $this->info('Model generated successfully');
+
         if ($data['with-filament-resources']) {
             foreach ($data['models'] as $modelName => $fields) {
-                Artisan::call('make:filament-resource '.$modelName.' --generate');
+                Artisan::call('make:filament-resource '.$modelName.' --generate --force');
             }
         }
+
+        $this->info('Blueprint generated successfully');
     }
 }
