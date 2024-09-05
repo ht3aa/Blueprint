@@ -24,7 +24,7 @@ php artisan blueprint:make path/to/your/json/file
                 "type": "string",
                 "nullable": false
             }
-        },
+        }
     },
 
     "models": {
@@ -33,7 +33,25 @@ php artisan blueprint:make path/to/your/json/file
             "relations": {
                 "relationType": "relationName"
             }
-        },
+        }
+    },
+
+    "repositories": {
+        "repositoryName": {
+            "model": "modelName"
+        }
+    },
+
+    "controllers": {
+        "controllerName": {
+            "repository": "repositoryName"
+        }
+    },
+
+    "routes" : {
+        "resources": {
+            "resourceName": "controllerName"
+        }
     },
 
     "with-filament-resources": true
