@@ -2,8 +2,11 @@
 
 namespace Hasanweb\Blueprint\Commands;
 
+use Hasanweb\Blueprint\Controllers\Controller;
 use Hasanweb\Blueprint\Migrations\Migration;
 use Hasanweb\Blueprint\Models\Model;
+use Hasanweb\Blueprint\Repositories\Repository;
+use Hasanweb\Blueprint\Routes\Route;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -56,13 +59,25 @@ class Blueprint extends Command
         }
 
         // generate migartions files and migrate them
-        Migration::make($data);
+        Migration::make($data['migrations']);
         Artisan::call('migrate:fresh');
         $this->info('Migration generated successfully');
 
         // generate model files
-        Model::make($data);
+        Model::make($data['models']);
         $this->info('Model generated successfully');
+
+        // generate repository files
+        Repository::make($data['repositories']);
+        $this->info('repositories generated successfully');
+
+        // generate controller files
+        Controller::make($data['controllers']);
+        $this->info('controllers generated successfully');
+
+        // generate route files
+        Route::make($data['routes']);
+        $this->info('routes generated successfully');
 
         // generate filament resources if the user wants it
         if ($data['with-filament-resources']) {

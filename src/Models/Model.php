@@ -82,7 +82,7 @@ public function $relationNameLower(): $relationType
     public static function make($data)
     {
 
-        foreach ($data['models'] as $modelName => $fields) {
+        foreach ($data as $modelName => $fields) {
             $fillables = self::fillable($fields['fillable']);
             $relations = self::relations($fields['relations'] ?? []);
 

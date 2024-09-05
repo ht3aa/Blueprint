@@ -22,7 +22,7 @@ return new class extends Migration
         Schema::create(\"$tableName\", function (Blueprint \$table) {
           \$table->id();
 
-\r\r\r$columns
+          $columns
 
           \$table->timestamps();
         });
@@ -67,7 +67,7 @@ return new class extends Migration
         $incrementBy = 1;
         $randomNumber = rand(100000, 999999);
 
-        foreach ($data['migrations'] as $tableName => $fields) {
+        foreach ($data as $tableName => $fields) {
             $columns = self::columns($fields);
             $migration = self::template($tableName, $columns);
             $migrationFileName = date('Y_m_d').'_'.$randomNumber + $incrementBy.'_create_'.$tableName.'_table.php';
