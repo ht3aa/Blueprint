@@ -15,46 +15,43 @@ php artisan blueprint:make path/to/your/json/file
 ```
 {
     "migrations": {
-        "tableName": {
-            "tableColumnName": {
+        "[tableName]": {
+            "[tableColumnName]": {
                 "type": "string",
                 "nullable": true
-            },
-            "tableColumnName": {
-                "type": "string",
-                "nullable": false
             }
         }
     },
 
     "models": {
-        "modelName": {
+        "[modelName]": {
             "fillable": ["name", "email"],
             "relations": {
-                "relationType": ["relationName"]
+                "[relationType]": ["relationName"]
             }
         }
     },
 
     "repositories": {
-        "repositoryName": {
-            "model": "modelName"
+        "[repositoryName]": {
+            "model": "[modelName]"
         }
     },
 
     "controllers": {
-        "controllerName": {
-            "repository": "repositoryName"
+        "[controllerName]": {
+            "repository": "[repositoryName]"
         }
     },
 
     "routes" : {
         "resources": {
-            "resourceName": "controllerName"
+            "[resourceName]": "[controllerName]"
         }
     },
 
     "with-filament-resources": true
 }
 ```
+Anything inside [] is a placeholder. else is a keyword that should't be changed. 
 
