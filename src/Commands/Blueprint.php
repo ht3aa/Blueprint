@@ -22,7 +22,7 @@ class Blueprint extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'scaffold you app with ease';
 
     /**
      * Execute the console command.
@@ -55,21 +55,21 @@ class Blueprint extends Command
             return;
         }
 
+        // generate migartions files and migrate them
         Migration::make($data);
-
-        Artisan::call('migrate');
+        Artisan::call('migrate:fresh');
         $this->info('Migration generated successfully');
 
+        // generate model files
         Model::make($data);
-
         $this->info('Model generated successfully');
 
+        // generate filament resources if the user wants it
         if ($data['with-filament-resources']) {
             foreach ($data['models'] as $modelName => $fields) {
                 Artisan::call('make:filament-resource '.$modelName.' --generate --force');
             }
         }
-
         $this->info('Blueprint generated successfully');
     }
 }
