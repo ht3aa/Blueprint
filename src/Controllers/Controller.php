@@ -2,9 +2,7 @@
 
 namespace Hasanweb\Blueprint\Controllers;
 
-use Hasanweb\Blueprint\Contracts\FileTemplate;
-
-class Controller implements FileTemplate
+class Controller
 {
     private static function template($className, $repositoryName)
     {
