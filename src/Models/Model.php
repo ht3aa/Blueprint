@@ -70,10 +70,13 @@ public function $relationNameLower(): $relationType
         $relationsTemplate = '';
         $relationTypeNamespaces = '';
 
-        foreach ($relations as $relationName => $relationValue) {
+        foreach ($relations as $relationName => $relationValues) {
 
             $relationTypeNamespaces .= "use Illuminate\Database\Eloquent\Relations\\$relationName;\n";
-            $relationsTemplate .= self::relationTemplate($relationName, $relationValue)."\n\n";
+
+            foreach ($relationValues as $relationValue) {
+                $relationsTemplate .= self::relationTemplate($relationName, $relationValue)."\n\n";
+            }
         }
 
         return ['template' => $relationsTemplate, 'namespaces' => $relationTypeNamespaces];

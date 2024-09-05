@@ -31,7 +31,7 @@ php artisan blueprint:make path/to/your/json/file
         "modelName": {
             "fillable": ["name", "email"],
             "relations": {
-                "relationType": "relationName"
+                "relationType": ["relationName"]
             }
         }
     },
