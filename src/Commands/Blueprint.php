@@ -27,6 +27,45 @@ class Blueprint extends Command
      */
     protected $description = 'scaffold you app with ease';
 
+    public function generateRepositorySyntaxArray($models)
+    {
+        $repositories = [];
+
+        foreach ($models as $key => $value) {
+            $repositoryName = $key.'Repository';
+            $repositories[$repositoryName] = ['model' => $key];
+        }
+
+        return $repositories;
+    }
+
+    public function generateControllerSyntaxArray($models)
+    {
+        $controllers = [];
+
+        foreach ($models as $key => $value) {
+            $controllerName = $key.'Controller';
+            $controllers[$controllerName] = [
+                'repository' => $key.'Repository',
+            ];
+        }
+
+        return $controllers;
+    }
+
+    public function generateRouteResourcesSyntaxArray($models)
+    {
+
+        $resources = [];
+
+        foreach ($models as $key) {
+            $routeName = strtolower($key);
+            $resources['resources'][$routeName] = $key.'Controller';
+        }
+
+        return $resources;
+    }
+
     /**
      * Execute the console command.
      */
@@ -63,21 +102,28 @@ class Blueprint extends Command
         Artisan::call('migrate:fresh');
         $this->info('Migration generated successfully');
 
+        $models = $data['models'];
+
         // generate model files
-        Model::make($data['models']);
+        Model::make($models);
         $this->info('Model generated successfully');
 
-        // generate repository files
-        Repository::make($data['repositories']);
-        $this->info('repositories generated successfully');
+        if ($data['with-controller-resources']) {
+            // generate repository files
+            $repositories = $this->generateRepositorySyntaxArray($models);
+            Repository::make($repositories);
+            $this->info('repositories generated successfully');
 
-        // generate controller files
-        Controller::make($data['controllers']);
-        $this->info('controllers generated successfully');
+            // generate controller files
+            $controllers = $this->generateControllerSyntaxArray($models);
+            Controller::make($controllers);
+            $this->info('controllers generated successfully');
 
-        // generate route files
-        Route::make($data['routes']);
-        $this->info('routes generated successfully');
+            // generate route files
+            $routeResources = $this->generateRouteResourcesSyntaxArray(array_keys($models));
+            Route::make($routeResources);
+            $this->info('routes generated successfully');
+        }
 
         // generate filament resources if the user wants it
         if ($data['with-filament-resources']) {
