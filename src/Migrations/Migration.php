@@ -40,10 +40,23 @@ return new class extends Migration
         return $fileTemplate;
     }
 
-    private static function isNullable($isNullable)
+    private static function attributesStr($attributes)
     {
+        $str = '';
+        $formattedValue = '';
+        foreach ($attributes as $attribute => $value) {
+            if (is_string($value) && ! empty($value)) {
+                $formattedValue = "'$value'";
+            } elseif (is_bool($value)) {
+                $formattedValue = $value ? 'true' : 'false';
 
-        return $isNullable ? '->nullable()' : '';
+            }
+
+            $str .= "->$attribute($formattedValue)";
+        }
+
+        return $str;
+
     }
 
     private static function columns($fields)
@@ -51,10 +64,10 @@ return new class extends Migration
         $columns = '';
 
         foreach ($fields as $fieldName => $fieldOptions) {
-            $isNullable = self::isNullable($fieldOptions['nullable']);
+            $attributesStr = self::attributesStr($fieldOptions['attributes']);
             $fieldType = $fieldOptions['type'];
 
-            $columns .= "\$table->$fieldType('$fieldName')$isNullable;\n";
+            $columns .= "\$table->$fieldType('$fieldName')$attributesStr;\n";
 
         }
 

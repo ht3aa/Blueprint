@@ -99,7 +99,6 @@ class Blueprint extends Command
 
         // generate migartions files and migrate them
         Migration::make($data['migrations']);
-        Artisan::call('migrate:fresh');
         $this->info('Migration generated successfully');
 
         $models = $data['models'];
