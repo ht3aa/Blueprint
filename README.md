@@ -21,7 +21,8 @@ php artisan blueprint:make path/to/your/json/file
                 "attributes": {
                     "unique": true,
                     "constraint": "",
-                    "nullable": "hello"
+                    "nullable": "hello",
+                    ...
                 }
             }
         }
