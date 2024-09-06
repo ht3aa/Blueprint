@@ -89,14 +89,27 @@ class $className extends Controller
         return $fileTemplate;
     }
 
-    public static function make($data)
+    public static function make($data, $tableOutput)
     {
 
+        $tableRows = [];
         foreach ($data as $className => $key) {
             $fileTemplate = self::template($className, $key['repository']);
-            $filePath = base_path("app/Http/Controllers/$className.php");
+
+            $fileName = $className.'.php';
+
+            $filePath = base_path("app/Http/Controllers/$fileName");
+
+            array_push($tableRows, [$fileName]);
             file_put_contents($filePath, $fileTemplate);
         }
+
+        // Set the table headers.
+        $tableOutput->setHeaders([
+            'Generated Controllers Files',
+        ]);
+        $tableOutput->setRows($tableRows);
+        $tableOutput->render();
 
     }
 }

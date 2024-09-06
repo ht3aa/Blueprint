@@ -10,6 +10,7 @@ use Hasanweb\Blueprint\Routes\Route;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Console\Helper\Table;
 
 class Blueprint extends Command
 {
@@ -71,6 +72,9 @@ class Blueprint extends Command
      */
     public function handle()
     {
+        // Create a new Table instance.
+        $table = new Table($this->output);
+
         // Get the filename argument
         $filename = $this->argument('filename');
 
@@ -98,25 +102,21 @@ class Blueprint extends Command
         }
 
         // generate migartions files and migrate them
-        Migration::make($data['migrations']);
-        $this->info('Migration generated successfully');
+        Migration::make($data['migrations'], $table);
 
         $models = $data['models'];
 
         // generate model files
-        Model::make($models);
-        $this->info('Model generated successfully');
+        Model::make($models, $table);
 
         if ($data['with-controller-resources']) {
             // generate repository files
             $repositories = $this->generateRepositorySyntaxArray($models);
-            Repository::make($repositories);
-            $this->info('repositories generated successfully');
+            Repository::make($repositories, $table);
 
             // generate controller files
             $controllers = $this->generateControllerSyntaxArray($models);
-            Controller::make($controllers);
-            $this->info('controllers generated successfully');
+            Controller::make($controllers, $table);
 
             // generate route files
             $routeResources = $this->generateRouteResourcesSyntaxArray(array_keys($models));

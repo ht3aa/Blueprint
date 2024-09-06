@@ -44,16 +44,28 @@ class $className
         return $fileTemplate;
     }
 
-    public static function make($data)
+    public static function make($data, $tableOutput)
     {
 
+        $tableRows = [];
         if (! is_dir(base_path('app/Repositories'))) {
             mkdir(base_path('app/Repositories'));
         }
         foreach ($data as $className => $key) {
             $fileTemplate = self::template($className, $key['model']);
-            $filePath = base_path("app/Repositories/$className.php");
+            $fileName = $className.'.php';
+
+            $filePath = base_path("app/Repositories/$fileName");
+
+            array_push($tableRows, [$fileName]);
             file_put_contents($filePath, $fileTemplate);
         }
+
+        // Set the table headers.
+        $tableOutput->setHeaders([
+            'Generated Repositories Files',
+        ]);
+        $tableOutput->setRows($tableRows);
+        $tableOutput->render();
     }
 }

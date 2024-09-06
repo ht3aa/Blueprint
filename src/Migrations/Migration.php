@@ -75,19 +75,30 @@ return new class extends Migration
 
     }
 
-    public static function make($data)
+    public static function make($data, $tableOutput)
     {
         $incrementBy = 1;
         $randomNumber = rand(100000, 999999);
+        $tableRows = [];
 
         foreach ($data as $tableName => $fields) {
             $columns = self::columns($fields);
             $migration = self::template($tableName, $columns);
             $migrationFileName = date('Y_m_d').'_'.$randomNumber + $incrementBy.'_create_'.$tableName.'_table.php';
             $migrationFilePath = database_path('migrations/'.$migrationFileName);
+
+            array_push($tableRows, [$migrationFileName]);
+
             file_put_contents($migrationFilePath, $migration);
             $incrementBy += 1;
 
         }
+        // Set the table headers.
+        $tableOutput->setHeaders([
+            'Generated Migration Files',
+        ]);
+        $tableOutput->setRows($tableRows);
+        $tableOutput->render();
+
     }
 }
