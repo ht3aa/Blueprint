@@ -3,7 +3,8 @@
 namespace Hasanweb\Blueprint\Seeders;
 
 use Faker\Factory as FakerFactory;
-use Hasanweb\Blueprint\Helpers\Naming;
+use Hasanweb\Blueprint\Helpers\Format;
+use Hasanweb\Blueprint\Helpers\Name;
 
 class Seeder
 {
@@ -92,7 +93,7 @@ class $seederName extends Seeder
 
     public static function getRelationId($relation)
     {
-        $tableName = Naming::getTableNameFromForeignKeyName($relation);
+        $tableName = Name::getTableNameFromForeignKeyName($relation);
 
         return "DB::table('$tableName')->inRandomOrder()->first()->id";
     }
@@ -206,7 +207,7 @@ class $seederName extends Seeder
         $fieldsStr = '';
         foreach ($fields as $fieldName => $attributes) {
             $fieldValue = self::getValue($fieldName, $attributes['type']);
-            $fieldsStr .= "'$fieldName' => $fieldValue,\n";
+            $fieldsStr .= Format::addTabs(3)."'$fieldName' => $fieldValue,\n";
         }
 
         return $fieldsStr;
@@ -215,9 +216,11 @@ class $seederName extends Seeder
     public static function getRecord($tableName, $fields)
     {
         $fields = self::getFields($fields);
-        $record = "DB::table('$tableName')->insert([
-        $fields
-              ]);";
+        $record = "
+        DB::table('$tableName')->insert([
+$fields
+        ]);
+";
 
         return $record;
 
@@ -238,7 +241,7 @@ class $seederName extends Seeder
                 $records .= self::getRecord($tableName, $fields)."\n";
             }
 
-            $seederName = Naming::getModelNameFromTableName($tableName).'Seeder';
+            $seederName = Name::getModelNameFromTableName($tableName).'Seeder';
             $seedersToBeCalled .= $seederName.'::class,'."\n";
             $fileTemplate = self::template($seederName, $records);
 

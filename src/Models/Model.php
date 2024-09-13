@@ -25,11 +25,9 @@ class $modelName extends Model
      */
     protected \$fillable = [
       $fields
-   ];
-
+    ];
 
     $relations
-
 }
     ";
 
@@ -41,10 +39,12 @@ class $modelName extends Model
         $relationTypeLower = lcfirst($relationType);
         $relationNameLower = lcfirst($relationName);
         $relationTemplate = "
-public function $relationNameLower(): $relationType
-{
-  return \$this->$relationTypeLower($relationName::class);
-}";
+    public function $relationNameLower(): $relationType
+    {
+        return \$this->$relationTypeLower($relationName::class);
+    }
+
+";
 
         return $relationTemplate;
 

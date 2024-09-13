@@ -2,6 +2,8 @@
 
 namespace Hasanweb\Blueprint\Migrations;
 
+use Hasanweb\Blueprint\Helpers\Format;
+
 class Migration
 {
     private static function template($tableName, $columns)
@@ -20,11 +22,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(\"$tableName\", function (Blueprint \$table) {
-          \$table->id();
-
-          $columns
-
-          \$table->timestamps();
+            \$table->id();
+$columns
+            \$table->timestamps();
         });
     }
 
@@ -71,7 +71,7 @@ return new class extends Migration
             $attributesStr = self::attributesStr($fieldOptions['attributes'] ?? '');
             $fieldType = $fieldOptions['type'];
 
-            $columns .= "\$table->$fieldType('$fieldName')$attributesStr;\n";
+            $columns .= Format::addTabs(3)."\$table->$fieldType('$fieldName')$attributesStr;\n";
 
         }
 

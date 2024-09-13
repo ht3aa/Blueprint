@@ -4,7 +4,7 @@ namespace Hasanweb\Blueprint\Helpers;
 
 use Illuminate\Support\Str;
 
-class Naming
+class Name
 {
     public static function getModelNameFromTableName($tableName)
     {
