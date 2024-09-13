@@ -165,6 +165,20 @@ class $seederName extends Seeder
         return self::outputAsString($date);
     }
 
+    public static function getRandomUnsignedTinyInteger()
+    {
+        $number = rand(0, 255);
+
+        return $number;
+    }
+
+    public static function getRandomDateTime()
+    {
+        $dateTime = self::$faker->dateTime();
+
+        return self::outputAsString($dateTime);
+    }
+
     public static function getValue($fieldName, $fieldType)
     {
         switch ($fieldType) {
@@ -180,12 +194,19 @@ class $seederName extends Seeder
             case 'integer':
                 return self::getRandomInteger();
                 break;
+            case 'unsignedTinyInteger':
+                return self::getRandomUnsignedTinyInteger();
+                break;
             case 'boolean':
                 return self::getRandomBoolean();
                 break;
 
             case 'time':
                 return self::getRandomTime();
+                break;
+
+            case 'dateTime':
+                return self::getRandomDateTime();
                 break;
 
             case 'date':
