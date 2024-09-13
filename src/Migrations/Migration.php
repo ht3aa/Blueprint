@@ -42,6 +42,10 @@ return new class extends Migration
 
     private static function attributesStr($attributes)
     {
+        if (empty($attributes)) {
+            return '';
+        }
+
         $str = '';
         $formattedValue = '';
         foreach ($attributes as $attribute => $value) {
@@ -64,7 +68,7 @@ return new class extends Migration
         $columns = '';
 
         foreach ($fields as $fieldName => $fieldOptions) {
-            $attributesStr = self::attributesStr($fieldOptions['attributes']);
+            $attributesStr = self::attributesStr($fieldOptions['attributes'] ?? '');
             $fieldType = $fieldOptions['type'];
 
             $columns .= "\$table->$fieldType('$fieldName')$attributesStr;\n";
