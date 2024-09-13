@@ -7,6 +7,7 @@ use Hasanweb\Blueprint\Migrations\Migration;
 use Hasanweb\Blueprint\Models\Model;
 use Hasanweb\Blueprint\Repositories\Repository;
 use Hasanweb\Blueprint\Routes\Route;
+use Hasanweb\Blueprint\Seeders\Seeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
@@ -102,7 +103,11 @@ class Blueprint extends Command
         }
 
         // generate migartions files and migrate them
-        Migration::make($data['migrations'], $table, $data['with-seeders']);
+        Migration::make($data['migrations'], $table);
+
+        if ($data['with-seeders']) {
+            Seeder::make($data['migrations'], 10, $table);
+        }
 
         $models = $data['models'];
 

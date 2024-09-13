@@ -10,4 +10,9 @@ class Naming
     {
         return ucfirst(Str::singular($tableName));
     }
+
+    public static function getTableNameFromForeignKeyName($foreignKeyName)
+    {
+        return Str::plural(Str::snake(str_replace('_id', '', $foreignKeyName)));
+    }
 }

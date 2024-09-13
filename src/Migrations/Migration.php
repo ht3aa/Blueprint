@@ -2,8 +2,6 @@
 
 namespace Hasanweb\Blueprint\Migrations;
 
-use Hasanweb\Blueprint\Seeders\Seeder;
-
 class Migration
 {
     private static function template($tableName, $columns)
@@ -77,7 +75,7 @@ return new class extends Migration
 
     }
 
-    public static function make($data, $tableOutput, $withSeeders)
+    public static function make($data, $tableOutput)
     {
         $incrementBy = 1;
         $randomNumber = rand(100000, 999999);
@@ -88,10 +86,6 @@ return new class extends Migration
             $migration = self::template($tableName, $columns);
             $migrationFileName = date('Y_m_d').'_'.$randomNumber + $incrementBy.'_create_'.$tableName.'_table.php';
             $migrationFilePath = database_path('migrations/'.$migrationFileName);
-
-            if ($withSeeders) {
-                Seeder::make($data);
-            }
 
             array_push($tableRows, [$migrationFileName]);
 
