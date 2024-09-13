@@ -24,6 +24,7 @@
         "php": "*",
         "illuminate/support": "^11.22",
         "illuminate/console": "^11.22",
-        "symfony/console": "^7.1"
+        "symfony/console": "^7.1",
+        "fakerphp/faker": "^1.23"
     }
 }

@@ -102,7 +102,7 @@ class Blueprint extends Command
         }
 
         // generate migartions files and migrate them
-        Migration::make($data['migrations'], $table);
+        Migration::make($data['migrations'], $table, $data['with-seeders']);
 
         $models = $data['models'];
 
@@ -130,6 +130,7 @@ class Blueprint extends Command
                 Artisan::call('make:filament-resource '.$modelName.' --generate --force');
             }
         }
+
         $this->info('Blueprint generated successfully');
     }
 }
