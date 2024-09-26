@@ -79,6 +79,9 @@ class Blueprint extends Command
         Route::make($data['routes']);
         $this->info('routes generated successfully');
 
+        // migrate the files
+        Artisan::call('migrate:fresh');
+
         // generate filament resources if the user wants it
         if ($data['with-filament-resources']) {
             foreach ($data['models'] as $modelName => $fields) {
