@@ -25,11 +25,9 @@ class $modelName extends Model
      */
     protected \$fillable = [
       $fields
-   ];
-
+    ];
 
     $relations
-
 }
     ";
 
@@ -41,10 +39,12 @@ class $modelName extends Model
         $relationTypeLower = lcfirst($relationType);
         $relationNameLower = lcfirst($relationName);
         $relationTemplate = "
-public function $relationNameLower(): $relationType
-{
-  return \$this->$relationTypeLower($relationName::class);
-}";
+    public function $relationNameLower(): $relationType
+    {
+        return \$this->$relationTypeLower($relationName::class);
+    }
+
+";
 
         return $relationTemplate;
 
@@ -82,16 +82,28 @@ public function $relationNameLower(): $relationType
         return ['template' => $relationsTemplate, 'namespaces' => $relationTypeNamespaces];
     }
 
-    public static function make($data)
+    public static function make($data, $tableOutput)
     {
 
+        $tableRows = [];
         foreach ($data as $modelName => $fields) {
             $fillables = self::fillable($fields['fillable']);
             $relations = self::relations($fields['relations'] ?? []);
 
             $fileContent = self::template($modelName, $fillables, $relations['template'], $relations['namespaces']);
-            $filePath = app_path("Models/$modelName.php");
+            $fileName = $modelName.'.php';
+            $filePath = app_path("Models/$fileName");
+
+            array_push($tableRows, [$fileName]);
+
             file_put_contents($filePath, $fileContent);
         }
+
+        // Set the table headers.
+        $tableOutput->setHeaders([
+            'Generated Models Files',
+        ]);
+        $tableOutput->setRows($tableRows);
+        $tableOutput->render();
     }
 }

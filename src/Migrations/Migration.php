@@ -2,6 +2,8 @@
 
 namespace Hasanweb\Blueprint\Migrations;
 
+use Hasanweb\Blueprint\Helpers\Format;
+
 class Migration
 {
     private static function template($tableName, $columns)
@@ -20,11 +22,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create(\"$tableName\", function (Blueprint \$table) {
-          \$table->id();
-
-          $columns
-
-          \$table->timestamps();
+            \$table->id();
+$columns
+            \$table->timestamps();
         });
     }
 
@@ -40,10 +40,27 @@ return new class extends Migration
         return $fileTemplate;
     }
 
-    private static function isNullable($isNullable)
+    private static function attributesStr($attributes)
     {
+        if (empty($attributes)) {
+            return '';
+        }
 
-        return $isNullable ? '->nullable()' : '';
+        $str = '';
+        $formattedValue = '';
+        foreach ($attributes as $attribute => $value) {
+            if (is_string($value) && ! empty($value)) {
+                $formattedValue = "'$value'";
+            } elseif (is_bool($value)) {
+                $formattedValue = $value ? 'true' : 'false';
+
+            }
+
+            $str .= "->$attribute($formattedValue)";
+        }
+
+        return $str;
+
     }
 
     private static function columns($fields)
@@ -51,10 +68,10 @@ return new class extends Migration
         $columns = '';
 
         foreach ($fields as $fieldName => $fieldOptions) {
-            $isNullable = self::isNullable($fieldOptions['nullable']);
+            $attributesStr = self::attributesStr($fieldOptions['attributes'] ?? '');
             $fieldType = $fieldOptions['type'];
 
-            $columns .= "\$table->$fieldType('$fieldName')$isNullable;\n";
+            $columns .= Format::addTabs(3)."\$table->$fieldType('$fieldName')$attributesStr;\n";
 
         }
 
@@ -62,19 +79,30 @@ return new class extends Migration
 
     }
 
-    public static function make($data)
+    public static function make($data, $tableOutput)
     {
         $incrementBy = 1;
         $randomNumber = rand(100000, 999999);
+        $tableRows = [];
 
         foreach ($data as $tableName => $fields) {
             $columns = self::columns($fields);
             $migration = self::template($tableName, $columns);
             $migrationFileName = date('Y_m_d').'_'.$randomNumber + $incrementBy.'_create_'.$tableName.'_table.php';
             $migrationFilePath = database_path('migrations/'.$migrationFileName);
+
+            array_push($tableRows, [$migrationFileName]);
+
             file_put_contents($migrationFilePath, $migration);
             $incrementBy += 1;
 
         }
+        // Set the table headers.
+        $tableOutput->setHeaders([
+            'Generated Migration Files',
+        ]);
+        $tableOutput->setRows($tableRows);
+        $tableOutput->render();
+
     }
 }

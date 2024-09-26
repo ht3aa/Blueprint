@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Route;
 
     public static function make($data)
     {
+
         $resourcesRoutes = self::resourcesRoutes($data['resources']);
         $fileTemplate = self::template($resourcesRoutes['routes'], $resourcesRoutes['controllersNamespace']);
         $filePath = base_path('routes/web.php');

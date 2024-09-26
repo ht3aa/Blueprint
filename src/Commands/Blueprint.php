@@ -7,9 +7,11 @@ use Hasanweb\Blueprint\Migrations\Migration;
 use Hasanweb\Blueprint\Models\Model;
 use Hasanweb\Blueprint\Repositories\Repository;
 use Hasanweb\Blueprint\Routes\Route;
+use Hasanweb\Blueprint\Seeders\Seeder;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
+use Symfony\Component\Console\Helper\Table;
 
 class Blueprint extends Command
 {
@@ -27,11 +29,53 @@ class Blueprint extends Command
      */
     protected $description = 'scaffold you app with ease';
 
+    public function generateRepositorySyntaxArray($models)
+    {
+        $repositories = [];
+
+        foreach ($models as $key => $value) {
+            $repositoryName = $key.'Repository';
+            $repositories[$repositoryName] = ['model' => $key];
+        }
+
+        return $repositories;
+    }
+
+    public function generateControllerSyntaxArray($models)
+    {
+        $controllers = [];
+
+        foreach ($models as $key => $value) {
+            $controllerName = $key.'Controller';
+            $controllers[$controllerName] = [
+                'repository' => $key.'Repository',
+            ];
+        }
+
+        return $controllers;
+    }
+
+    public function generateRouteResourcesSyntaxArray($models)
+    {
+
+        $resources = [];
+
+        foreach ($models as $key) {
+            $routeName = strtolower($key);
+            $resources['resources'][$routeName] = $key.'Controller';
+        }
+
+        return $resources;
+    }
+
     /**
      * Execute the console command.
      */
     public function handle()
     {
+        // Create a new Table instance.
+        $table = new Table($this->output);
+
         // Get the filename argument
         $filename = $this->argument('filename');
 
@@ -59,25 +103,31 @@ class Blueprint extends Command
         }
 
         // generate migartions files and migrate them
-        Migration::make($data['migrations']);
-        Artisan::call('migrate:fresh');
-        $this->info('Migration generated successfully');
+        Migration::make($data['migrations'], $table);
+
+        if ($data['with-seeders']) {
+            Seeder::make($data['migrations'], 10, $table);
+        }
+
+        $models = $data['models'];
 
         // generate model files
-        Model::make($data['models']);
-        $this->info('Model generated successfully');
+        Model::make($models, $table);
 
-        // generate repository files
-        Repository::make($data['repositories']);
-        $this->info('repositories generated successfully');
+        if ($data['with-controller-resources']) {
+            // generate repository files
+            $repositories = $this->generateRepositorySyntaxArray($models);
+            Repository::make($repositories, $table);
 
-        // generate controller files
-        Controller::make($data['controllers']);
-        $this->info('controllers generated successfully');
+            // generate controller files
+            $controllers = $this->generateControllerSyntaxArray($models);
+            Controller::make($controllers, $table);
 
-        // generate route files
-        Route::make($data['routes']);
-        $this->info('routes generated successfully');
+            // generate route files
+            $routeResources = $this->generateRouteResourcesSyntaxArray(array_keys($models));
+            Route::make($routeResources);
+            $this->info('routes generated successfully');
+        }
 
         // migrate the files
         Artisan::call('migrate:fresh');
@@ -88,6 +138,7 @@ class Blueprint extends Command
                 Artisan::call('make:filament-resource '.$modelName.' --generate --force');
             }
         }
+
         $this->info('Blueprint generated successfully');
     }
 }

@@ -18,7 +18,12 @@ php artisan blueprint:make path/to/your/json/file
         "[tableName]": {
             "[tableColumnName]": {
                 "type": "string",
-                "nullable": true
+                "attributes": {
+                    "unique": true,
+                    "constraint": "",
+                    "nullable": "hello",
+                    ...
+                }
             }
         }
     },
@@ -32,26 +37,11 @@ php artisan blueprint:make path/to/your/json/file
         }
     },
 
-    "repositories": {
-        "[repositoryName]": {
-            "model": "[modelName]"
-        }
-    },
 
-    "controllers": {
-        "[controllerName]": {
-            "repository": "[repositoryName]"
-        }
-    },
-
-    "routes" : {
-        "resources": {
-            "[resourceName]": "[controllerName]"
-        }
-    },
-
+    "with-controller-resources" : true,
     "with-filament-resources": true
 }
 ```
 Anything inside [] is a placeholder. else is a keyword that should't be changed. 
-
+The order of attributes is the way that it will be written (unique(true)->constraint()->nullable("hello")...). 
+Empty string is the default value. 
